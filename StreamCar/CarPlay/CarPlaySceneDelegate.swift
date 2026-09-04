@@ -25,9 +25,8 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         // Setup initial root CarPlay template
         templateManager?.setupRootTemplate()
         
-        // Listen for session configuration changes (e.g. video playback capability)
-        let sessionConfig = templateApplicationScene.carConfiguration
-        print("[StreamCar CarPlay] Limiter status: \(sessionConfig.navigationOwner)")
+        // Log CarPlay scene connection
+        print("[StreamCar CarPlay] CarPlay Scene connected successfully.")
     }
     
     func templateApplicationScene(

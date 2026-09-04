@@ -24,7 +24,7 @@ class PlaybackEngine: ObservableObject {
     func setupAudioSession() {
         do {
             let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playback, mode: .moviePlayback, options: [.allowBluetooth, .allowBluetoothA2DP, .mixWithOthers])
+            try session.setCategory(.playback, mode: .moviePlayback, options: [.allowBluetoothHFP, .allowBluetoothA2DP, .mixWithOthers])
             try session.setActive(true)
             setupRemoteCommandCenter()
             print("[StreamCar Engine] AVAudioSession configured successfully.")
