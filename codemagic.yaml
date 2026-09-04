@@ -1,23 +1,16 @@
-name: Build StreamCar iOS IPA
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
-jobs:
-  build-ios-ipa:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Set up Xcode
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
+workflows:
+  build-streamcar-ipa:
+    name: Build StreamCar iOS IPA
+    max_build_duration: 30
+    instance_type: mac_mini_m1
+    environment:
+      xcode: latest
+    scripts:
       - name: Build Unsigned IPA Archive using xcodebuild
-        run: |
+        script: |
           mkdir -p build/Payload
           
-          # Compile native Swift project or Web view app using xcodebuild
+          # Compile native Swift project using xcodebuild
           xcodebuild -project StreamCar/StreamCar.xcodeproj \
                      -scheme StreamCar \
                      -configuration Release \
@@ -27,16 +20,10 @@ jobs:
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGNING_ALLOWED=NO \
                      clean build
-          
-          # Move compiled .app bundle into Payload folder
+
+          # Copy .app bundle into Payload folder and zip to StreamCar.ipa
           cp -r build/DerivedData/Build/Products/Release-iphoneos/*.app build/Payload/
-          
-          # Zip Payload into StreamCar.ipa
           cd build
           zip -r StreamCar.ipa Payload
-          
-      - name: Upload StreamCar IPA Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: StreamCar-iOS-IPA
-          path: build/StreamCar.ipa
+    artifacts:
+      - build/*.ipa
