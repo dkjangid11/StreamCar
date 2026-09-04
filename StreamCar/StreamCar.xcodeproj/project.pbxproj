@@ -61,7 +61,7 @@
 				110015 /* Info.plist */,
 				110016 /* StreamCar.entitlements */,
 			);
-			path = StreamCar;
+			name = StreamCar;
 			sourceTree = "<group>";
 		};
 		110020 /* Products */ = {
