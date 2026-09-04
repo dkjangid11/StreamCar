@@ -8,6 +8,10 @@ workflows:
     scripts:
       - name: Build Unsigned IPA Archive using xcodebuild
         script: |
+          set -e
+          
+          # Clean previous build artifacts
+          rm -rf build
           mkdir -p build/Payload
           
           # Compile native Swift project using xcodebuild
@@ -20,10 +24,22 @@ workflows:
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGNING_ALLOWED=NO \
                      clean build
-
-          # Copy .app bundle into Payload folder and zip to StreamCar.ipa
-          cp -r build/DerivedData/Build/Products/Release-iphoneos/*.app build/Payload/
-          cd build
-          zip -r StreamCar.ipa Payload
+          # Find compiled .app bundle dynamically
+          APP_PATH=$(find build -name "*.app" -type d | head -n 1)
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "Searching system DerivedData for StreamCar.app..."
+            APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "*.app" -type d | head -n 1)
+          fi
+          if [ -n "$APP_PATH" ]; then
+            echo "Found compiled app at: $APP_PATH"
+            cp -R "$APP_PATH" build/Payload/
+            cd build
+            zip -r StreamCar.ipa Payload
+            echo "Successfully generated StreamCar.ipa!"
+          else
+            echo "Error: StreamCar.app bundle was not found."
+            exit 1
+          fi
     artifacts:
-      - build/*.ipa
+      - build/StreamCar.ipa
