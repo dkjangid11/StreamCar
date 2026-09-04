@@ -25,6 +25,8 @@
 		<string>audio</string>
 		<string>external-accessory</string>
 	</array>
+	<key>CPSupportedCategory</key>
+	<string>CPSupportedCategoryAudio</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
